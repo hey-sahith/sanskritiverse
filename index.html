@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SanskritiVerse (विरासत) - India's Living Cultural Heritage in 3D & AI</title>
+  <meta name="description" content="An interactive, multi-sensory web application showcasing India's rich cultural heritage, 3D monuments with historical time-travel, AI voice folklore, and artifact vision scanner." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            saffron: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c'
+            },
+            temple: {
+              gold: '#f59e0b',
+              amber: '#d97706',
+              dark: '#050814'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Leaflet.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Custom Heritage Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Leaflet.js CDN -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-[#050814] text-slate-100 min-h-screen selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ==================== HEADER & NAVIGATION ==================== -->
+  <header class="sticky top-0 z-50 glass-header px-4 lg:px-8 py-3.5 transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-600 to-amber-400 p-0.5 shadow-lg shadow-orange-500/30 group-hover:scale-105 transition-transform">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <span class="text-xl">🏛️</span>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-black font-heritage tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500" data-i18n="app_title">SanskritiVerse</span>
+            <span class="text-xs px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/40 text-amber-300 rounded font-bold">विरासत</span>
+          </div>
+          <p class="text-[10px] text-slate-400 font-medium hidden sm:block" data-i18n="app_tagline">India's Living Cultural Heritage Odyssey</p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold text-slate-300">
+        <a href="#map-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_map">
+          <span>Heritage Map</span>
+        </a>
+        <a href="#three-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_3d">
+          <span>3D Time-Travel</span>
+        </a>
+        <a href="#lens-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_lens">
+          <span>Heritage Lens</span>
+        </a>
+        <a href="#voice-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_voice">
+          <span>Voice & Stories</span>
+        </a>
+        <a href="#sign-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_sign">
+          <span>Sign Studio</span>
+        </a>
+        <a href="#quest-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_quest">
+          <span>Quest Game</span>
+        </a>
+        <a href="#calendar-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_calendar">
+          <span>Festivals</span>
+        </a>
+        <a href="#travel-section" class="hover:text-amber-400 transition-colors flex items-center gap-1.5" data-i18n="nav_travel">
+          <span>Travel</span>
+        </a>
+      </nav>
+
+      <!-- Right Utility Controls -->
+      <div class="flex items-center gap-2.5">
+        <!-- Global Language Selector -->
+        <div class="relative">
+          <select id="global-lang-select" class="text-xs font-bold bg-slate-900/90 text-amber-300 border border-amber-500/30 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:border-amber-400 cursor-pointer appearance-none">
+            <option value="en">English (India)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="gu">ગુજરાતી (Gujarati)</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-amber-400">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+        </div>
+
+        <!-- Sound FX Button -->
+        <button id="btn-sound-toggle" class="btn-secondary-sm flex items-center gap-1.5 py-1.5 px-2.5" title="Toggle Sound Feedback">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <span class="hidden md:inline text-xs">Audio FX</span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="btn-mobile-menu" class="xl:hidden p-2 rounded-lg bg-slate-900 border border-white/10 text-slate-300 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="hidden xl:hidden mt-3 pt-3 border-t border-white/10 bg-slate-950/95 rounded-xl p-4 space-y-2 text-sm font-semibold">
+      <a href="#map-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_map">Heritage Map</a>
+      <a href="#three-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_3d">3D Time-Travel</a>
+      <a href="#lens-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_lens">Heritage Lens</a>
+      <a href="#voice-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_voice">Voice & Stories</a>
+      <a href="#sign-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_sign">Sign Language Studio</a>
+      <a href="#quest-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_quest">Quest Game</a>
+      <a href="#calendar-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_calendar">Cultural Calendar</a>
+      <a href="#travel-section" class="block py-1.5 px-2 rounded hover:bg-amber-500/10 hover:text-amber-400" data-i18n="nav_travel">Smart Travel Guide</a>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="relative pt-12 pb-20 px-4 lg:px-8 overflow-hidden">
+    <div class="hero-glow"></div>
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+      
+      <!-- Hackathon Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-6 animate-pulse">
+        <span>✨</span>
+        <span data-i18n="hero_badge">Student Innovation for Heritage Preservation</span>
+      </div>
+
+      <!-- Title Headline -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black font-heritage tracking-tight leading-tight sm:leading-tight">
+        <span class="text-slate-100" data-i18n="hero_title_1">Experience India's Eternal</span><br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500" data-i18n="hero_title_2">
+          Culture, Reimagined in 3D & AI
+        </span>
+      </h1>
+
+      <!-- Description -->
+      <p class="mt-6 text-sm sm:text-base text-slate-300 max-w-3xl mx-auto leading-relaxed" data-i18n="hero_desc">
+        Step through 5,000 years of civilization. Unravel ancient temple engineering with time-traveling 3D monuments, listen to folklore narrated in regional tongues, explore with AI vision, and embark on gamified quests.
+      </p>
+
+      <!-- Quick Action Buttons -->
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <button data-scroll-to="three-section" class="btn-primary-sm flex items-center gap-2 text-sm py-2.5 px-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <span data-i18n="btn_explore">Explore in 3D</span>
+        </button>
+
+        <button data-scroll-to="lens-section" class="btn-secondary-sm flex items-center gap-2 text-sm py-2.5 px-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          <span data-i18n="btn_scan">Scan Artifact</span>
+        </button>
+
+        <button data-scroll-to="quest-section" class="btn-secondary-sm flex items-center gap-2 text-sm py-2.5 px-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span data-i18n="btn_start_quest">Play Quest</span>
+        </button>
+
+        <button data-scroll-to="voice-section" class="btn-secondary-sm flex items-center gap-2 text-sm py-2.5 px-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <span data-i18n="btn_listen">Listen Folklore</span>
+        </button>
+      </div>
+
+      <!-- Stat Counters Bar -->
+      <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div class="text-2xl font-black text-amber-400">3,600+</div>
+          <p class="text-xs text-slate-300 mt-1" data-i18n="stat_traditions">Living Traditions</p>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div class="text-2xl font-black text-orange-400">42</div>
+          <p class="text-xs text-slate-300 mt-1" data-i18n="stat_unesco">UNESCO World Sites</p>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div class="text-2xl font-black text-yellow-300">5,000+</div>
+          <p class="text-xs text-slate-300 mt-1" data-i18n="stat_history">Years of History</p>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div class="text-2xl font-black text-emerald-400">22</div>
+          <p class="text-xs text-slate-300 mt-1" data-i18n="stat_languages">Official Languages</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 1. INTERACTIVE HERITAGE MAP ==================== -->
+  <section id="map-section" class="py-12 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+          <span>📍</span>
+          <span>Geospatial Heritage Discovery</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="map_title">
+          Interactive Heritage Map of India
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl" data-i18n="map_subtitle">
+          Navigate iconic UNESCO monuments, architectural marvels, and sacred hubs across all 6 cultural zones.
+        </p>
+      </div>
+
+      <!-- Zone Filter Pills -->
+      <div id="map-zone-filters" class="flex flex-wrap gap-1.5 p-1 bg-slate-900/90 border border-white/10 rounded-xl">
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all active-zone" data-zone="all" data-i18n="filter_all">All Zones</button>
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-zone="north" data-i18n="filter_north">North</button>
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-zone="south" data-i18n="filter_south">South</button>
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-zone="east" data-i18n="filter_east">East</button>
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-zone="west" data-i18n="filter_west">West</button>
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-zone="central" data-i18n="filter_central">Central</button>
+        <button class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-zone="northeast" data-i18n="filter_northeast">Northeast</button>
+      </div>
+    </div>
+
+    <!-- Map Canvas Container -->
+    <div class="relative rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl">
+      <div id="heritage-map" class="w-full h-[540px] z-10"></div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. 3D MONUMENT VIEWER WITH TIME SLIDER ==================== -->
+  <section id="three-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 lg:p-8">
+      
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+            <span>🏛️</span>
+            <span>Three.js Spatial Engine</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="three_title">
+            3D Monument Explorer & Historical Timeline
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl" data-i18n="three_subtitle">
+            Rotate, zoom, and travel through centuries to witness architectural construction, golden eras, and modern restorations.
+          </p>
+        </div>
+
+        <!-- Monument Selector & Controls -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="three-monument-select" class="text-xs font-bold bg-slate-900 text-amber-300 border border-amber-500/40 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-400 cursor-pointer">
+            <option value="taj-mahal">Taj Mahal (Agra, Uttar Pradesh)</option>
+            <option value="konark-sun-temple">Konark Sun Temple (Odisha)</option>
+            <option value="hampi-vittala">Hampi Stone Chariot (Karnataka)</option>
+            <option value="sanchi-stupa">Great Stupa of Sanchi (Madhya Pradesh)</option>
+          </select>
+
+          <!-- Lighting Mode Group -->
+          <div id="three-lighting-modes" class="flex items-center bg-slate-900/90 border border-white/10 rounded-lg p-1">
+            <button class="px-2.5 py-1 text-[11px] font-semibold rounded text-slate-300 active-mode" data-light="golden" title="Golden Hour / Dawn">🌅 Dawn</button>
+            <button class="px-2.5 py-1 text-[11px] font-semibold rounded text-slate-300" data-light="day" title="Midday Light">☀️ Noon</button>
+            <button class="px-2.5 py-1 text-[11px] font-semibold rounded text-slate-300" data-light="night" title="Moonlit Aarti">🌙 Night</button>
+          </div>
+
+          <button id="btn-toggle-rotate" class="btn-secondary-sm py-1.5 px-2.5 active-rotate" title="Toggle Auto-Rotation">
+            🔄 Auto
+          </button>
+          <button id="btn-reset-camera" class="btn-secondary-sm py-1.5 px-2.5" title="Reset Viewpoint">
+            🎯 Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- 3D Canvas Viewport -->
+      <div class="relative">
+        <div id="three-canvas-container"></div>
+        <div class="absolute top-4 left-4 pointer-events-none bg-slate-950/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg text-xs text-slate-300 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Drag to rotate • Scroll to zoom</span>
+        </div>
+      </div>
+
+      <!-- Historical Time Slider -->
+      <div class="mt-6 p-5 bg-slate-900/80 border border-amber-500/20 rounded-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div>
+            <span class="text-xs uppercase font-bold text-amber-400 tracking-wider" data-i18n="timeline_title">Chronological Time Slider</span>
+            <h4 id="timeline-active-year" class="text-base font-bold text-white">2026 CE (Modern Conservation)</h4>
+          </div>
+          <div class="flex items-center gap-4 text-xs font-semibold text-slate-400">
+            <span data-i18n="time_ancient">1000 CE Origin</span>
+            <span>→</span>
+            <span data-i18n="time_medieval">1500 CE Peak</span>
+            <span>→</span>
+            <span data-i18n="time_colonial">1850 CE Colonial</span>
+            <span>→</span>
+            <span class="text-amber-400" data-i18n="time_present">2026 CE Present</span>
+          </div>
+        </div>
+
+        <input id="three-time-slider" type="range" min="0" max="100" value="100" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer time-slider-track" />
+
+        <div class="mt-3 p-3 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-200 flex items-start gap-2">
+          <span class="text-amber-400 font-bold text-sm">📜</span>
+          <p id="timeline-annotation" class="leading-relaxed">
+            Architectural elements reflecting structural conservation, laser cleaning, and material preservation through the centuries.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 3. HERITAGE LENS (AI VISION) ==================== -->
+  <section id="lens-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+        <span>👁️</span>
+        <span>Neural Computer Vision</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="lens_title">
+        Heritage Lens: AI Vision & Artifact Scanner
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl mx-auto" data-i18n="lens_subtitle">
+        Upload or capture any monument, temple relief, or ancient sculpture. Our AI analyzes dynasty, era, material, and architectural style.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Upload / Camera Viewport (Col 7) -->
+      <div class="lg:col-span-7 glass-panel p-6">
+        <div id="lens-upload-area" class="relative border-2 border-dashed border-white/20 hover:border-amber-500/50 rounded-2xl p-6 text-center cursor-pointer transition-colors min-h-[340px] flex flex-col items-center justify-center overflow-hidden bg-slate-950/40">
+          
+          <!-- Live Camera Video -->
+          <video id="lens-video" class="hidden w-full h-full object-cover rounded-xl absolute inset-0" playsinline></video>
+          
+          <!-- Image Preview -->
+          <img id="lens-preview-image" src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80" alt="Artifact Preview" class="w-full h-full object-cover rounded-xl absolute inset-0" />
+
+          <!-- Laser Scan Line Overlay -->
+          <div id="lens-scan-overlay" class="hidden absolute inset-0 bg-sky-950/20 backdrop-blur-[1px] flex flex-col items-center justify-center z-20">
+            <div class="scan-laser-line"></div>
+            <div class="bg-slate-950/90 border border-amber-500/40 px-4 py-2 rounded-xl text-center shadow-xl">
+              <span class="inline-block w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mr-2"></span>
+              <span id="lens-scan-status" class="text-xs font-semibold text-amber-300">Scanning artifact geometry...</span>
+            </div>
+          </div>
+
+          <!-- Empty State Overlay (shown if no preview) -->
+          <div id="lens-empty-prompt" class="hidden relative z-10 p-6 pointer-events-none">
+            <div class="w-14 h-14 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center mx-auto mb-3 text-2xl">
+              📸
+            </div>
+            <p class="text-sm font-semibold text-slate-200" data-i18n="lens_drag_drop">Drop artifact photo here, or click to browse</p>
+            <p class="text-xs text-slate-400 mt-1">Supports JPG, PNG, WEBP</p>
+          </div>
+        </div>
+
+        <input type="file" id="lens-file-input" accept="image/*" class="hidden" />
+
+        <!-- Controls Toolbar -->
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button id="btn-lens-webcam" class="btn-secondary-sm flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+              <span data-i18n="lens_webcam">Use Live Camera</span>
+            </button>
+            <button id="btn-lens-capture" class="hidden btn-primary-sm flex items-center gap-1.5">
+              <span>Capture Frame</span>
+            </button>
+          </div>
+          <span class="text-xs text-slate-400">Click any preset below to test instantly</span>
+        </div>
+
+        <!-- Presets Bar -->
+        <div class="mt-5 pt-4 border-t border-white/10">
+          <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider block mb-2" data-i18n="lens_presets_label">
+            Or try instant benchmark artifacts:
+          </span>
+          <div id="lens-presets-container" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+        </div>
+      </div>
+
+      <!-- AI Analysis Result Card (Col 5) -->
+      <div class="lg:col-span-5">
+        <div id="lens-result-card" class="glass-panel p-6 border-amber-500/40">
+          <div class="flex items-center justify-between">
+            <span class="confidence-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              AI Match: 99.4%
+            </span>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">
+              Sacred Metallurgy
+            </span>
+          </div>
+          <h3 class="text-xl font-bold text-white mt-2">Chola Bronze Nataraja (Lord of Dance)</h3>
+
+          <div class="grid grid-cols-2 gap-2 mt-4 text-xs">
+            <div class="meta-box">
+              <span class="meta-label">Dynasty / Era</span>
+              <span class="meta-val">Imperial Chola (10th-11th C. CE)</span>
+            </div>
+            <div class="meta-box">
+              <span class="meta-label">Material & Technique</span>
+              <span class="meta-val">Panchaloha Sacred Bronze</span>
+            </div>
+            <div class="meta-box col-span-2">
+              <span class="meta-label">Architectural / Artistic Style</span>
+              <span class="meta-val">Chola Classical Lost-Wax Casting</span>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-amber-400 mb-1">Cultural Significance</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Universally hailed by astrophysicists (including Carl Sagan) and art historians as the supreme sculptural representation of the cosmic cycles of creation, preservation, and dissolution (Ananda Tandava).
+            </p>
+          </div>
+
+          <div class="mt-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-amber-400 mb-1">Diagnostic Features</h4>
+            <ul class="text-xs text-slate-300 space-y-1 list-disc pl-4">
+              <li>Upper right hand holds the Damaru drum of cosmic creation.</li>
+              <li>Upper left hand holds the Agni fire of cosmic transformation.</li>
+              <li>Right foot tramples Apasmara, the dwarf demon of spiritual ignorance.</li>
+            </ul>
+          </div>
+
+          <div class="mt-5 flex items-center gap-3">
+            <button id="btn-lens-speak-result" class="btn-primary-sm flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <span>Read AI Breakdown</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 4. AI VOICE BOT & FOLKLORE STUDIO ==================== -->
+  <section id="voice-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 lg:p-8">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+            <span>🎙️</span>
+            <span>Web Speech API Synthesis</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="voice_title">
+            Swar-Virasat: AI Folklore & Voice Studio
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl" data-i18n="voice_subtitle">
+            Listen to centuries-old regional legends, architectural secrets, and oral traditions narrated in authentic regional accents.
+          </p>
+        </div>
+
+        <!-- Language & Voice Selection -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div>
+            <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1" data-i18n="voice_select_lang">Narration Language & Accent:</label>
+            <select id="voice-lang-select" class="text-xs font-bold bg-slate-900 text-amber-300 border border-amber-500/40 rounded-lg px-3 py-1.5 cursor-pointer focus:outline-none">
+              <option value="en">English (Indian Accent)</option>
+              <option value="hi">हिंदी (Hindi Narration)</option>
+              <option value="ta">தமிழ் (Tamil Narration)</option>
+              <option value="te">తెలుగు (Telugu Narration)</option>
+              <option value="bn">বাংলা (Bengali Narration)</option>
+              <option value="mr">मराठी (Marathi Narration)</option>
+              <option value="gu">ગુજરાતી (Gujarati Narration)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">Speed Rate:</label>
+            <input id="voice-rate-slider" type="range" min="0.8" max="1.4" step="0.1" value="1.0" class="w-24 accent-amber-500 cursor-pointer" />
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Story Selector & Controls (Col 5) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div>
+            <label class="block text-xs text-amber-400 font-bold uppercase mb-1.5" data-i18n="voice_select_story">Select Cultural Story:</label>
+            <select id="voice-story-select" class="w-full text-xs font-bold bg-slate-900 text-white border border-white/15 rounded-xl p-3 focus:outline-none focus:border-amber-400 cursor-pointer"></select>
+          </div>
+
+          <!-- Real-Time Audio Visualizer Canvas -->
+          <div class="p-4 bg-slate-950/80 border border-white/10 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Audio Resonance Wave</span>
+              <span class="text-[10px] text-amber-400">Synthesizer Active</span>
+            </div>
+            <canvas id="voice-visualizer-canvas" class="w-full h-12 rounded"></canvas>
+          </div>
+
+          <!-- Audio Action Buttons -->
+          <div class="flex items-center gap-2.5">
+            <button id="btn-voice-play" class="btn-primary-sm flex-1 flex items-center justify-center gap-2 py-2.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>Narrate Story</span>
+            </button>
+            <button id="btn-voice-pause" class="btn-secondary-sm py-2.5 px-3" title="Pause">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <button id="btn-voice-stop" class="btn-secondary-sm py-2.5 px-3" title="Stop">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Story Transcript Card (Col 7) -->
+        <div class="lg:col-span-7 p-6 bg-slate-950/60 border border-white/10 rounded-2xl">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+            <span class="text-xs uppercase font-semibold text-amber-400 tracking-wider">Oral Tradition & Folklore</span>
+            <span class="text-xs text-slate-400">Synchronized Transcript</span>
+          </div>
+          <p id="voice-story-text" class="text-sm text-slate-200 leading-relaxed min-h-[160px] font-serif"></p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 5. INCLUSIVE SIGN LANGUAGE (ISL) STUDIO ==================== -->
+  <section id="sign-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 lg:p-8">
+      
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+          <span>🤟</span>
+          <span>Accessibility Innovation</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="sign_title">
+          Inclusive Sign Language (ISL) Studio
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl mx-auto" data-i18n="sign_subtitle">
+          Making Indian cultural heritage accessible to deaf and hard-of-hearing students through animated Indian Sign Language gestures.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Animated Avatar Canvas (Col 6) -->
+        <div class="lg:col-span-6 flex flex-col items-center">
+          <div class="relative w-full max-w-[380px] h-[300px] bg-slate-950/80 border border-amber-500/30 rounded-2xl overflow-hidden shadow-2xl p-2 flex items-center justify-center">
+            <canvas id="sign-avatar-canvas" class="w-full h-full"></canvas>
+            <div class="absolute bottom-3 left-3 bg-slate-900/90 border border-white/10 px-2.5 py-1 rounded text-[10px] text-amber-300 font-bold">
+              ISL Certified Motion
+            </div>
+          </div>
+
+          <!-- Speed Controls -->
+          <div class="flex items-center gap-2 mt-4">
+            <span class="text-xs text-slate-400">Gesture Speed:</span>
+            <button class="px-2.5 py-1 rounded text-xs bg-white/5 border border-white/10 text-slate-300" data-sign-speed="0.75">0.75x</button>
+            <button class="px-2.5 py-1 rounded text-xs bg-white/5 border border-white/10 text-slate-300 active-speed" data-sign-speed="1.0">1.0x</button>
+            <button class="px-2.5 py-1 rounded text-xs bg-white/5 border border-white/10 text-slate-300" data-sign-speed="1.25">1.25x</button>
+          </div>
+        </div>
+
+        <!-- Phrase Selection & Captions (Col 6) -->
+        <div class="lg:col-span-6 space-y-4">
+          <label class="block text-xs uppercase font-bold text-amber-400 tracking-wider">Select Heritage Phrase in ISL:</label>
+          <div id="sign-phrase-selector" class="grid grid-cols-2 gap-2"></div>
+
+          <!-- Subtitle / Caption Card -->
+          <div class="p-5 bg-slate-950/80 border border-amber-500/20 rounded-2xl space-y-2 mt-4">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase text-amber-400">Active Gesture Interpretation</span>
+              <span class="text-[10px] text-emerald-400">Synchronized</span>
+            </div>
+            <p id="sign-caption-en" class="text-base font-bold text-white"></p>
+            <p id="sign-caption-hi" class="text-xs text-amber-300"></p>
+            <p id="sign-gesture-desc" class="text-xs text-slate-400 pt-2 border-t border-white/10 leading-relaxed"></p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 6. HERITAGE QUEST GAME ==================== -->
+  <section id="quest-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+        <span>🎮</span>
+        <span>Student Gamified Learning</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="quest_title">
+        Heritage Quest: Student Gamification
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl mx-auto" data-i18n="quest_subtitle">
+        Embark on discovery missions, answer archaeological trivia, unlock ancient seals, and earn XP to become a Virasat Guardian!
+      </p>
+    </div>
+
+    <div class="glass-panel p-6 lg:p-8">
+      <div id="quest-module-container"></div>
+    </div>
+  </section>
+
+  <!-- ==================== 7. CULTURAL CALENDAR & FESTIVALS ==================== -->
+  <section id="calendar-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+          <span>🗓️</span>
+          <span>Pan-Indian Living Traditions</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="calendar_title">
+          Cultural Calendar & Regional Festivals
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl" data-i18n="calendar_subtitle">
+          Journey through India's vibrant cyclical calendar of agricultural harvests, sacred equinoxes, and folk celebrations.
+        </p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div id="festival-filter-tabs" class="flex flex-wrap gap-1.5 p-1 bg-slate-900/90 border border-white/10 rounded-xl">
+        <button class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all active-tab" data-category="all">All Seasons</button>
+        <button class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-category="harvest">🌾 Harvest</button>
+        <button class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-category="vernal">🌸 Vernal</button>
+        <button class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-category="sacred">🪔 Sacred</button>
+        <button class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all" data-category="folk">🪘 Folk & Arts</button>
+      </div>
+    </div>
+
+    <!-- Festival Cards Grid -->
+    <div id="festival-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <!-- ==================== 8. SMART TRAVEL GUIDE ==================== -->
+  <section id="travel-section" class="py-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 lg:p-8">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs uppercase font-bold text-amber-400 tracking-wider mb-1">
+            <span>🌿</span>
+            <span>Responsible Tourism Planning</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black font-heritage text-white" data-i18n="travel_title">
+            Smart & Sustainable Travel Guide
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl" data-i18n="travel_subtitle">
+            Eco-friendly itineraries, green transport routes, best visiting seasons, and GI-tagged local artisanal handlooms.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">Select Heritage Destination:</label>
+          <select id="travel-site-selector" class="text-xs font-bold bg-slate-900 text-amber-300 border border-amber-500/40 rounded-lg px-3 py-2 cursor-pointer focus:outline-none"></select>
+        </div>
+      </div>
+
+      <div id="travel-guide-container"></div>
+
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="py-12 px-4 lg:px-8 border-t border-white/10 bg-slate-950 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🏛️</span>
+        <div>
+          <h4 class="font-bold text-white font-heritage tracking-wider text-sm">SanskritiVerse (विरासत)</h4>
+          <p class="text-[11px] text-slate-400">Student Innovation for Cultural Heritage & Living Traditions</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-6 text-slate-300 font-medium">
+        <a href="#map-section" class="hover:text-amber-400">Map</a>
+        <a href="#three-section" class="hover:text-amber-400">3D Explorer</a>
+        <a href="#lens-section" class="hover:text-amber-400">AI Lens</a>
+        <a href="#voice-section" class="hover:text-amber-400">Folklore Voice</a>
+        <a href="#sign-section" class="hover:text-amber-400">Sign Language</a>
+        <a href="#quest-section" class="hover:text-amber-400">Quests</a>
+        <a href="#calendar-section" class="hover:text-amber-400">Festivals</a>
+      </div>
+
+      <p class="text-slate-400 text-[11px]">
+        Built with HTML5, Tailwind CSS, Three.js & Web Speech API.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==================== SITE DETAIL SLIDE-OVER DRAWER ==================== -->
+  <div id="monument-detail-drawer" class="hidden fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm flex justify-end">
+    <div class="w-full max-w-xl bg-slate-950 border-l border-amber-500/30 h-full overflow-y-auto shadow-2xl relative">
+      <button id="btn-close-drawer" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-slate-900/80 border border-white/20 text-white flex items-center justify-center hover:bg-amber-500 hover:text-slate-950 transition-colors">
+        ✕
+      </button>
+      <div id="monument-drawer-content"></div>
+    </div>
+  </div>
+
+  <!-- ==================== FESTIVAL DETAIL MODAL ==================== -->
+  <div id="festival-detail-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-slate-950 border border-amber-500/30 rounded-2xl overflow-hidden shadow-2xl relative">
+      <button id="btn-close-fest-modal" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-900/80 border border-white/20 text-white flex items-center justify-center hover:bg-amber-500 hover:text-slate-950 transition-colors">
+        ✕
+      </button>
+      <div id="festival-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ==================== FLOATING AI HERITAGE CHATBOT ==================== -->
+  <div class="floating-chat-launcher">
+    <button id="btn-chat-toggle" class="relative group p-3.5 bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-400 text-slate-950 rounded-full shadow-2xl shadow-orange-500/40 hover:scale-105 transition-transform flex items-center gap-2 font-bold text-xs" title="Chat with AI Heritage Guide">
+      <div class="chat-pulse-ring"></div>
+      <span class="text-xl">🪷</span>
+      <span class="hidden sm:inline font-heritage font-bold">Ask AI Guide</span>
+    </button>
+  </div>
+
+  <!-- Floating Chat Window Modal -->
+  <div id="chat-window-modal" class="hidden fixed bottom-20 right-4 sm:right-8 z-50 w-[92vw] sm:w-[420px] max-h-[580px] glass-panel border-amber-500/40 shadow-2xl flex flex-col overflow-hidden">
+    
+    <!-- Chat Header -->
+    <div class="p-3.5 bg-slate-950/90 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-sm shadow">
+          🪷
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white font-heritage" data-i18n="chat_title">Heritage AI Guide</h4>
+          <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Online • Vedic & Architectural Knowledge
+          </span>
+        </div>
+      </div>
+      <button id="btn-chat-close" class="text-slate-400 hover:text-white text-xs px-2 py-1 rounded bg-white/5">
+        ✕
+      </button>
+    </div>
+
+    <!-- Quick Question Chips -->
+    <div id="chat-chips-container" class="p-2.5 bg-slate-950/40 border-b border-white/5 flex gap-1.5 overflow-x-auto scrollbar-none"></div>
+
+    <!-- Messages Body -->
+    <div id="chat-messages-body" class="p-4 flex-1 overflow-y-auto space-y-3 max-h-[340px] text-xs">
+      <div class="chat-bubble-bot">
+        <p class="text-xs text-slate-200" data-i18n="chat_welcome">
+          Namaste! I am your AI Heritage Guide. Ask me about India's great dynasties, temple architecture, stone carving techniques, or folklore!
+        </p>
+      </div>
+    </div>
+
+    <!-- Input Footer -->
+    <div class="p-3 bg-slate-950/90 border-t border-white/10 flex items-center gap-2">
+      <input id="chat-input-field" type="text" placeholder="Ask anything about monuments, dynasties..." class="flex-1 text-xs bg-slate-900 border border-white/15 rounded-xl px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-amber-400" data-i18n-placeholder="chat_placeholder" />
+      <button id="btn-chat-send" class="btn-primary-sm py-2 px-3 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Main JavaScript App Entry Point -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
