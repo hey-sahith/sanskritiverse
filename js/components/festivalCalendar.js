@@ -39,7 +39,7 @@ function renderFestivalCards(category) {
   container.innerHTML = filtered.map(f => `
     <div class="festival-card group" data-festival-id="${f.id}">
       <div class="fest-image-wrapper">
-        <img src="${f.image}" alt="${f.name}" class="fest-image" onerror="this.src='https://images.unsplash.com/photo-1548625361-1959779df5e0?auto=format&fit=crop&w=600&q=80'" />
+        <img src="${f.image}" alt="${f.name}" class="fest-image" loading="lazy" onerror="this.onerror=null; this.src='images/festivals/pongal.jpg';" />
         <div class="fest-tag-pill">${f.month}</div>
         <div class="fest-overlay"></div>
       </div>
@@ -74,8 +74,8 @@ function openFestivalModal(fest) {
   if (!modal || !modalBody) return;
 
   modalBody.innerHTML = `
-    <div class="relative h-56 rounded-t-2xl overflow-hidden">
-      <img src="${fest.image}" alt="${fest.name}" class="w-full h-full object-cover" />
+    <div class="relative h-64 rounded-t-2xl overflow-hidden bg-slate-900">
+      <img src="${fest.image}" alt="${fest.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='images/festivals/pongal.jpg';" />
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
       <div class="absolute bottom-4 left-6 right-6">
         <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500 text-slate-950 rounded-full font-bold">

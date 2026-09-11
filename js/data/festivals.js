@@ -9,7 +9,7 @@ export const festivals = [
     season: "Winter Harvest",
     category: "harvest",
     regions: "Tamil Nadu, Andhra Pradesh, Karnataka, Maharashtra, Gujarat, Punjab (Lohri)",
-    image: "https://images.unsplash.com/photo-1548625361-1959779df5e0?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/pongal.jpg",
     significance: "Celebrates the transition of the Sun God Surya into Capricorn (Makara Rashi) and gratitude for the winter bounty of sugarcane, freshly harvested paddy, and turmeric.",
     traditions: [
       "Cooking the sacred sweet 'Pongal' in earthen pots until it boils over, with families shouting 'Pongalo Pongal!' to usher in overflowing prosperity.",
@@ -28,7 +28,7 @@ export const festivals = [
     season: "Spring Vernal Equinox",
     category: "vernal",
     regions: "Assam & Northeast India",
-    image: "https://images.unsplash.com/photo-1576487248805-cf45f6bcc67f?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/bihu.jpg",
     significance: "Marks the Assamese New Year and the onset of the agricultural sowing season. It is an ecstatic celebration of youth, spring fertility, love, and community brotherhood.",
     traditions: [
       "Goru Bihu (Day 1): Bathing household cattle in rivers with wild turmeric and black gram paste, wishing them strength.",
@@ -47,7 +47,7 @@ export const festivals = [
     season: "Monsoon Harvest",
     category: "harvest",
     regions: "Kerala",
-    image: "https://images.unsplash.com/photo-1568832359672-e36cf5d74f54?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/onam.jpg",
     significance: "Welcomes the spirit of the mythical benevolent Asura King Mahabali who was granted a boon by Lord Vishnu's Vamana avatar to visit his beloved subjects once every year.",
     traditions: [
       "Pookkalam: Creating large, concentric, vibrant flower carpets on the front courtyards for 10 consecutive days.",
@@ -66,7 +66,7 @@ export const festivals = [
     season: "Autumn",
     category: "sacred",
     regions: "West Bengal, Tripura, Assam, Odisha, and pan-Indian Bengali diaspora",
-    image: "https://images.unsplash.com/photo-1601662528567-526cd06f6582?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/durga-puja.jpg",
     significance: "Inscribed on UNESCO's Representative List of Intangible Cultural Heritage. Commemorates Goddess Durga's victory over the demon Mahishasura, symbolizing the triumph of divine righteousness and female power (Shakti).",
     traditions: [
       "Crafting eco-friendly clay deities from the sacred mud of the holy Ganges (Ganga mati) in Kumartuli.",
@@ -85,7 +85,7 @@ export const festivals = [
     season: "Winter",
     category: "folk",
     regions: "Naga Heritage Village, Kisama, Nagaland",
-    image: "https://images.unsplash.com/photo-1596707328905-24d101157c0e?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/hornbill.jpg",
     significance: "Named after the revered Great Indian Hornbill bird. Unites all 17 indigenous Naga tribes in a vibrant 10-day celebration of war songs, folk architecture, textiles, and ancestral martial courage.",
     traditions: [
       "Tribal morungs (traditional bachelor dormitories) showcasing unique architectural carvings and totems of each Naga tribe.",
@@ -104,7 +104,7 @@ export const festivals = [
     season: "Post-Monsoon",
     category: "sacred",
     regions: "Bihar, Jharkhand, Eastern Uttar Pradesh, and Terai Nepal",
-    image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/chhath-puja.jpg",
     significance: "An ancient Vedic festival with no priestly mediation, dedicated to the Sun God Surya and Chhathi Maiyya. Devotees offer gratitude to the setting and rising sun for sustaining all earthly life.",
     traditions: [
       "A rigorous 36-hour waterless fast (Nirjala Upvas) maintained with profound spiritual purity.",
@@ -123,7 +123,7 @@ export const festivals = [
     season: "Winter",
     category: "folk",
     regions: "Pushkar, Thar Desert, Rajasthan",
-    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/pushkar.jpg",
     significance: "One of the world's largest camel livestock spectacles merged with a sacred Hindu pilgrimage to the holy Pushkar Sarovar and the only prominent Brahma Temple in the world.",
     traditions: [
       "Over 50,000 camels, horses, and cattle dressed in colorful woolen tassels, brass bells, and silver jewelry trading across sand dunes.",
@@ -142,7 +142,7 @@ export const festivals = [
     season: "Winter",
     category: "sacred",
     regions: "Varanasi, Uttar Pradesh",
-    image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80",
+    image: "images/festivals/dev-deepawali.jpg",
     significance: "Celebrated exactly 15 days after Diwali. According to Hindu belief, all thirty-three crore gods descend from heaven to bathe in the holy Ganges of Kashi and celebrate Lord Shiva's victory over the demon Tripurasura.",
     traditions: [
       "Over one million clay lamps (diyas) lit simultaneously across all 84 continuous ghats along the 7-km crescent of the river.",
