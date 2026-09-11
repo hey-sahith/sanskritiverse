@@ -4,7 +4,39 @@ import { quests } from '../data/quests.js';
 import { soundManager } from '../utils/audioEffects.js';
 import { fireConfetti } from '../utils/confetti.js';
 
-let activeQuest = quests[0];
+// --- SHUFFLE & RANDOMIZATION HELPERS ---
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function prepareRandomizedQuiz(quest) {
+  const shuffledQuestions = shuffleArray([...quest.questions]);
+  return shuffledQuestions.map((q) => {
+    const optionsWithMeta = q.options.map((optionText, originalIndex) => ({
+      text: optionText,
+      isCorrect: originalIndex === q.correct
+    }));
+    const randomizedOptions = shuffleArray(optionsWithMeta);
+    const newCorrectIndex = randomizedOptions.findIndex(opt => opt.isCorrect);
+
+    return {
+      ...q,
+      options: randomizedOptions.map(opt => opt.text),
+      correct: newCorrectIndex
+    };
+  });
+}
+
+// Initialize activeQuest with randomized questions out of the box
+let activeQuest = {
+  ...quests[0],
+  questions: prepareRandomizedQuiz(quests[0])
+};
+
 let currentQuestionIdx = 0;
 let userScore = 0;
 let userXP = 250;
@@ -73,14 +105,17 @@ function renderQuestInterface() {
     </div>
   `;
 
-  // Attach Mission Card listeners
+  // Attach Mission Card listeners with randomization applied
   container.querySelectorAll('button[data-quest-id]').forEach(btn => {
     btn.addEventListener('click', () => {
       const qId = btn.getAttribute('data-quest-id');
       const found = quests.find(q => q.id === qId);
       if (found) {
         soundManager.playClick();
-        activeQuest = found;
+        activeQuest = {
+          ...found,
+          questions: prepareRandomizedQuiz(found)
+        };
         currentQuestionIdx = 0;
         renderQuestInterface();
       }
@@ -151,7 +186,6 @@ function attachQuizOptionListeners() {
       options.forEach(b => b.disabled = true);
 
       const statusTitle = document.getElementById('quiz-status-title');
-      const statusIcon = document.getElementById('quiz-status-icon');
 
       if (selected === q.correct) {
         soundManager.playSuccess();
@@ -241,13 +275,22 @@ function getRank(xp) {
 document.addEventListener('click', (e) => {
   if (e.target && e.target.id === 'btn-replay-quest') {
     soundManager.playClick();
+    // Re-randomize on replay
+    activeQuest = {
+      ...activeQuest,
+      questions: prepareRandomizedQuiz(activeQuest)
+    };
     currentQuestionIdx = 0;
     renderQuestInterface();
   } else if (e.target && e.target.id === 'btn-next-quest') {
     soundManager.playClick();
     const currentIdx = quests.findIndex(q => q.id === activeQuest.id);
     const nextIdx = (currentIdx + 1) % quests.length;
-    activeQuest = quests[nextIdx];
+    const nextFound = quests[nextIdx];
+    activeQuest = {
+      ...nextFound,
+      questions: prepareRandomizedQuiz(nextFound)
+    };
     currentQuestionIdx = 0;
     renderQuestInterface();
   }

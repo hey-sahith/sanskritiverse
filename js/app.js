@@ -6,7 +6,7 @@ import { initVoiceBot, speakText } from './components/voiceBot.js';
 import { initMap, panToMonument, setMonumentSelectCallback } from './components/map.js';
 import { translations } from './data/translations.js';
 import { initSignLanguageStudio } from './components/signLanguage.js';
-import { initHeritageLens } from './components/heritageLens.js';
+
 import { initQuestGame } from './components/questGame.js';
 import { initFestivalCalendar } from './components/festivalCalendar.js';
 import { initTravelGuide, setTravelGuideMonument } from './components/travelGuide.js';
@@ -39,7 +39,7 @@ window.addEventListener('load', async () => {
   initThreeViewer();
   initVoiceBot();
   initSignLanguageStudio();
-  initHeritageLens();
+  //initHeritageLens();
   initQuestGame();
   initFestivalCalendar();
   initTravelGuide();

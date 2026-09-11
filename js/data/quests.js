@@ -182,3 +182,44 @@ export const quests = [
     ]
   }
 ];
+// 1. Add these helper functions at the top or bottom of your file
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function prepareRandomizedQuiz(quest) {
+  const shuffledQuestions = shuffleArray([...quest.questions]);
+  return shuffledQuestions.map((q) => {
+    const optionsWithMeta = q.options.map((optionText, originalIndex) => ({
+      text: optionText,
+      isCorrect: originalIndex === q.correct
+    }));
+    const randomizedOptions = shuffleArray(optionsWithMeta);
+    const newCorrectIndex = randomizedOptions.findIndex(opt => opt.isCorrect);
+
+    return {
+      ...q,
+      options: randomizedOptions.map(opt => opt.text),
+      correct: newCorrectIndex
+    };
+  });
+}
+
+// 2. Update where you initialize your quest questions
+// Example: When a user clicks a quest, wrap the quest data like this:
+function startQuest(quest) {
+  // Create a randomized copy of the quest's questions
+  const randomizedQuest = {
+    ...quest,
+    questions: prepareRandomizedQuiz(quest)
+  };
+
+  // Pass this randomizedQuest into your existing rendering logic
+  currentQuestData = randomizedQuest;
+  currentQuestionIndex = 0;
+  renderCurrentQuestion();
+}
