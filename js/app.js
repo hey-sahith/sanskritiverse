@@ -1,11 +1,10 @@
 // SanskritiVerse (Virasat) - Main Application Controller
-
-import { translations } from './data/translations.js';
 import { monuments } from './data/monuments.js';
 import { soundManager } from './utils/audioEffects.js';
-import { initMap, panToMonument, setMonumentSelectCallback } from './components/map.js';
 import { initThreeViewer, loadMonumentModel } from './components/threeViewer.js';
 import { initVoiceBot, speakText } from './components/voiceBot.js';
+import { initMap, panToMonument, setMonumentSelectCallback } from './components/map.js';
+import { translations } from './data/translations.js';
 import { initSignLanguageStudio } from './components/signLanguage.js';
 import { initHeritageLens } from './components/heritageLens.js';
 import { initQuestGame } from './components/questGame.js';
@@ -15,7 +14,7 @@ import { initChatBot } from './components/chatBot.js';
 
 let currentLanguage = 'en';
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', async () => {
   // 1. Initialize Localization
   initLanguageSwitcher();
 
@@ -24,7 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Register map callback and trigger secure Google Maps loader
   setMonumentSelectCallback(handleSelectMonument);
-  loadGoogleMaps();
+  try {
+    await loadGoogleMaps();
+    // If you have a specific map initialization function, call it here:
+    if (typeof initHeritageMap === 'function') {
+      initHeritageMap();
+    } else if (typeof initMap === 'function') {
+      initMap();
+    }
+  } catch (error) {
+    console.error("Failed to load Google Maps SDK:", error);
+  }
 
   // 4. Initialize Other Interactive Components
   initThreeViewer();
@@ -250,23 +259,23 @@ function scrollToSection(id) {
 }
 
 async function loadGoogleMaps() {
-  try {
-    const response = await fetch("http://127.0.0.1:5001/heritage-india-9d596/us-central1/api/api/config/maps");
+  const apiKey = "AIzaSyBmJpdh68E0E7ZYXi22Qxv1b2Nm31jlpHU";
+  if (window.google && window.google.maps && window.google.maps.Map) return;
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch config: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const apiKey = data.mapsApiKey;
-
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&v=weekly`;
     script.async = true;
     script.defer = true;
-
+    script.onload = () => {
+      // Ensure the Map constructor is fully ready before resolving
+      if (window.google && window.google.maps && window.google.maps.Map) {
+        resolve();
+      } else {
+        setTimeout(resolve, 100);
+      }
+    };
+    script.onerror = reject;
     document.head.appendChild(script);
-  } catch (error) {
-    console.error("Error loading Google Maps SDK:", error);
-  }
+  });
 }
