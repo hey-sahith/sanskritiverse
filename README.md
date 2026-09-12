@@ -28,20 +28,9 @@
 - Interactive lighting toggles: **Golden Hour / Dawn, Midday Radiance, and Moonlit Aarti / Night**.
 - Orbit drag rotation, scroll zoom, and auto-rotation toggle.
 
-### 3. 👁️ Heritage Lens: AI Vision & Artifact Scanner
-- Simulates AI computer vision for instant artifact and monument identification.
-- Supports **Live Webcam stream** (`getUserMedia`) with frame capture and **Drag-and-Drop file uploads**.
-- Holographic laser scanning HUD animation with real-time status telemetry.
-- **6 Instant Benchmark Presets** for immediate hackathon judge evaluation:
-  1. *Chola Bronze Nataraja* (Lost-wax bronze metallurgy)
-  2. *Stone Chariot Wheel of Konark* (Astronomical solar clock)
-  3. *Taj Mahal Marble Arch & Pietra Dura* (Mughal lapidary inlay)
-  4. *Bodhisattva Padmapani Fresco* (Ajanta Cave 1 tempera mural)
-  5. *Lion Capital of Ashoka* (Sarnath Mauryan imperial pillar)
-  6. *Stone Chariot of Vittala Temple* (Hampi granite monolithic shrine)
-- Provides confidence scores, dynasty, era, materials, architectural style, diagnostic features, and voice read-aloud.
 
-### 4. 🎙️ Swar-Virasat: AI Folklore & Voice Studio
+
+### 3. 🎙️ Swar-Virasat: AI Folklore & Voice Studio
 - Built with the native browser **Web Speech API** (`SpeechSynthesis`).
 - Regional language and accent support: **English (Indian accent), Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati**.
 - Narrates ancient folklore and mysteries:
@@ -52,7 +41,7 @@
 - Real-time **Canvas Audio Wave Visualizer** pulsing synchronously during speech.
 - Speed rate slider (0.8x to 1.4x), play, pause, and stop controls.
 
-### 5. 🤟 Inclusive Indian Sign Language (ISL) Studio
+### 4. 🤟 Inclusive Indian Sign Language (ISL) Studio
 - Accessibility feature for deaf and hard-of-hearing students.
 - Custom animated vector 2D avatar performing certified Indian Sign Language (ISL) gestures:
   - *Namaste / Welcome (Anjali Mudra)*
@@ -63,7 +52,7 @@
   - *Emperor / Rajaraja Chola (Imperial crown tracing)*
 - Speed controls (0.75x, 1.0x, 1.25x) and dual-language subtitles (English & Hindi).
 
-### 6. 🎮 Heritage Quest: Student Gamification
+### 5. 🎮 Heritage Quest: Student Gamification
 - Gamified student portal with multiple discovery missions:
   - *Secrets of the Chola Dynasty (Architecture & Maritime)*
   - *Wonders of Western India: Caves & Stepwells (Subterranean & Rock-Cut Art)*
@@ -72,12 +61,12 @@
 - XP progression, streak tracking, rank advancement (*Heritage Scout → Cultural Chronicler → Virasat Custodian → Virasat Grand Guardian*).
 - Sound effects via Web Audio API and celebratory confetti particle burst upon mission completion.
 
-### 7. 🗓️ Cultural Calendar & Regional Festivals
+### 6. 🗓️ Cultural Calendar & Regional Festivals
 - Pan-Indian seasonal explorer: **Pongal & Makar Sankranti, Rongali Bihu, Onam, Durga Puja, Hornbill Festival, Chhath Puja, Pushkar Camel Fair, and Dev Deepawali**.
 - Filtering by seasons: **Harvest, Vernal / Spring, Sacred, Folk & Arts**.
 - Deep-dive modals covering mythological origin stories, sacred rituals, festive delicacies, and regional folk rhythms.
 
-### 8. 🌿 Smart & Sustainable Travel Guide
+### 7. 🌿 Smart & Sustainable Travel Guide
 - Eco-conscious tourism planning for Indian heritage destinations.
 - Best visiting seasons and climatic considerations.
 - Nearest airports, railway stations, and high-speed rail connections.
@@ -85,13 +74,13 @@
 - **GI-Tagged Local Artisanal Handlooms & Crafts** (e.g., Patan Patola, Thanjavur paintings, Banarasi brocades).
 - Traditional regional food trails.
 
-### 9. 🪷 Floating Heritage Guide AI Chatbot
+### 8. 🪷 Floating Heritage Guide AI Chatbot
 - Always-accessible floating assistant with glowing halo badge.
 - Pre-loaded with comprehensive knowledge on Indian dynasties, temple architecture orders (Dravidian, Nagara, Vesara), stone carving techniques, and monument histories.
 - Quick question chips for instant answers.
 - Built-in **"Listen to Answer"** text-to-speech button on every response.
 
-### 10. 🌐 Comprehensive Multi-Language Localization
+### 9. 🌐 Comprehensive Multi-Language Localization
 - Global header dropdown switching UI text across **7 major Indian languages**:
   - English
   - हिन्दी (Hindi)
